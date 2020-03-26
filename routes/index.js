@@ -3,18 +3,17 @@
 
 const covid = require('novelcovid');
 const axios = require('axios');
-const express = require('express')
 const getResults = require("../scrapper");
+const express = require("express");
 const router = express.Router();
-const app = express();
 
 
-app.get('/', (req, res) => {
+router.get('/', (req, res) => {
 	res.send("api working");
 });
 
 // only counts
-app.get('/count', (req, res) => {
+router.get('/count', (req, res) => {
 	axios.get('https://api.coronatracker.com/v3/stats/worldometer/global')
 	  .then(function (response) {
 	    // handle success
@@ -32,7 +31,7 @@ app.get('/count', (req, res) => {
 });
 
 // all districts
-app.get('/districts', (req, res) => {
+router.get('/districts', (req, res) => {
 	const options = { headers: {'Origin': 'https://covidnepal.org'}};
 	if(req.query == {} || !req.query.province) {
 		res.send(JSON.stringify({'message': 'province key missing in request'}));
@@ -58,7 +57,7 @@ app.get('/districts', (req, res) => {
 
 // all hospitals
 
-app.get('/hospitals', (req, res) => {
+router.get('/hospitals', (req, res) => {
 	const options = { headers: {'Origin': 'https://covidnepal.org'}};
 	if(req.query == {} || (!req.query.province && !req.query.district)) {
 		res.send(JSON.stringify({'message': 'either province or district key missing in request'}));
@@ -83,13 +82,13 @@ app.get('/hospitals', (req, res) => {
 });
 
 // get press release from https://heoc.mohp.gov.np/
-app.get('/pressrelease', async function(req, res, next) {
+router.get('/pressrelease', async function(req, res, next) {
   const result = await getResults();
   res.send(result);
 });
 
 // all countries
-app.get('/stat', (req, res) => {
+router.get('/stat', (req, res) => {
 	   covid.getCountry({sort: 'recovered'}).then((data) => {
 	   	 console.log(data);
 	   	 res.send(JSON.stringify(data));
@@ -98,7 +97,7 @@ app.get('/stat', (req, res) => {
 });
 
 // get by country name
-app.get('/country', (req, res) => {
+router.get('/country', (req, res) => {
 	try {
 		if (req.query == {} || !req.query.name) {
 			res.send(JSON.stringify({'message': 'key name missing in request'}));
@@ -116,9 +115,9 @@ app.get('/country', (req, res) => {
 });
 
 
-app.listen(8019, () => {
-  console.log('Covid api listening on port 8019!')
-});
+// app.listen(8019, () => {
+//   console.log('Covid api listening on port 8019!')
+// });
 
 module.exports = router;
 
