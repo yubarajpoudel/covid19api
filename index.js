@@ -28,6 +28,57 @@ app.get('/count', (req, res) => {
 	  });
 });
 
+// all districts
+app.get('/districts', (req, res) => {
+	const options = { headers: {'Origin': 'https://covidnepal.org'}};
+	if(req.query == {} || !req.query.province) {
+		res.send(JSON.stringify({'message': 'province key missing in request'}));
+	} else{
+		var url = "https://api-prod.covidnepal.org:5000/districts?province="+req.query.province;
+		console.log(url);
+		axios.get(url, options)
+		  .then(function (response) {
+		    // handle success
+		    console.log(response.data);
+		    res.send(JSON.stringify(response.data));
+		  })
+		  .catch(function (error) {
+		    // handle error
+		    res.send(error);
+		    console.log(error);
+		  })
+		  .finally(function () {
+		    // always executed
+		  });
+	} 
+});
+
+// all hospitals
+
+app.get('/hospitals', (req, res) => {
+	const options = { headers: {'Origin': 'https://covidnepal.org'}};
+	if(req.query == {} || (!req.query.province && !req.query.district)) {
+		res.send(JSON.stringify({'message': 'either province or district key missing in request'}));
+	} else{
+		var url = "https://api-prod.covidnepal.org:5000/hospitals?province=" + req.query.province + "&district=" + req.query.district;
+		console.log(url);
+		axios.get(url, options)
+		  .then(function (response) {
+		    // handle success
+		    console.log(response.data);
+		    res.send(JSON.stringify(response.data));
+		  })
+		  .catch(function (error) {
+		    // handle error
+		    res.send(error);
+		    console.log(error);
+		  })
+		  .finally(function () {
+		    // always executed
+		  });
+	} 
+});
+
 // all countries
 app.get('/stat', (req, res) => {
 	   covid.getCountry({sort: 'recovered'}).then((data) => {
