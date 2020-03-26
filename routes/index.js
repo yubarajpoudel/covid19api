@@ -84,7 +84,7 @@ router.get('/hospitals', (req, res) => {
 });
 
 // get press release from https://heoc.mohp.gov.np/
-router.get('/pressrelease', (req, res) => {
+router.get('/np/pressrelease', (req, res) => {
   	const resultKeys = ["sn", "published_date", "title", "size", "download_url"];
   console.log("fetching data");
    axios.get(siteUrl)
