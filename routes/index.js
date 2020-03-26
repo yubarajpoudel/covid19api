@@ -4,7 +4,10 @@
 const covid = require('novelcovid');
 const axios = require('axios');
 const express = require('express')
+const getResults = require("../scrapper");
+const router = express.Router();
 const app = express();
+
 
 app.get('/', (req, res) => {
 	res.send("api working");
@@ -79,6 +82,12 @@ app.get('/hospitals', (req, res) => {
 	} 
 });
 
+// get press release from https://heoc.mohp.gov.np/
+app.get('/pressrelease', async function(req, res, next) {
+  const result = await getResults();
+  res.send(result);
+});
+
 // all countries
 app.get('/stat', (req, res) => {
 	   covid.getCountry({sort: 'recovered'}).then((data) => {
@@ -106,6 +115,11 @@ app.get('/country', (req, res) => {
 	
 });
 
+
 app.listen(8019, () => {
   console.log('Covid api listening on port 8019!')
 });
+
+module.exports = router;
+
+
