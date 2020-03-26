@@ -3,10 +3,12 @@
 
 const covid = require('novelcovid');
 const axios = require('axios');
-const getResults = require("../scrapper");
+// const getResults = require("../scrapper");
 const express = require("express");
 const router = express.Router();
-
+const cheerio = require("cheerio");
+const siteUrl = "https://heoc.mohp.gov.np/";
+const data = [];
 
 router.get('/', (req, res) => {
 	res.send("api working");
@@ -82,9 +84,40 @@ router.get('/hospitals', (req, res) => {
 });
 
 // get press release from https://heoc.mohp.gov.np/
-router.get('/pressrelease', async function(req, res, next) {
-  const result = await getResults();
-  res.send(result);
+router.get('/pressrelease', (req, res) => {
+  	const resultKeys = ["sn", "published_date", "title", "size", "download_url"];
+  console.log("fetching data");
+   axios.get(siteUrl)
+      .then(function (response) {
+        // handle success
+        // console.log(response.data);
+        const $ = cheerio.load(response.data);
+        $('#health-emergency tr').each((index, element) => {
+          var j = 0;
+          var objectResponse = {};
+          $(element).find('td').each((index, element) => {
+            if(j == 4) {
+              objectResponse[resultKeys[j]] = $(element).find('a').attr('href');
+            } else {
+              objectResponse[resultKeys[j]] = $(element).text();
+            }
+            j++;
+          });
+          data.push(objectResponse);
+        });
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+        res.send(error);
+      })
+      .finally(function () {
+        // always executed
+        console.log(data);
+        console.log("fetch completed");
+        data.shift();
+        res.send(JSON.stringify(data));
+      });
 });
 
 // all countries
