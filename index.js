@@ -2,6 +2,7 @@
 // @author: Yubaraj Poudel
 
 const covid = require('novelcovid');
+const axios = require('axios');
 const express = require('express')
 const app = express();
 
@@ -11,12 +12,20 @@ app.get('/', (req, res) => {
 
 // only counts
 app.get('/count', (req, res) => {
-  (async () => {
-    let all = await covid.getAll();
-    var responseData = { Cases: all.cases, Deaths: all.deaths, Recovered: all.recovered};
-    console.log(responseData);
-    res.send(JSON.stringify(responseData));
-})()
+	axios.get('https://api.coronatracker.com/v3/stats/worldometer/global')
+	  .then(function (response) {
+	    // handle success
+	    console.log(response.data);
+	    res.send(JSON.stringify(response.data));
+	  })
+	  .catch(function (error) {
+	    // handle error
+	    res.send(error);
+	    console.log(error);
+	  })
+	  .finally(function () {
+	    // always executed
+	  });
 });
 
 // all countries
