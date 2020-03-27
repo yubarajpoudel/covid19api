@@ -7,8 +7,16 @@ const axios = require('axios');
 const express = require("express");
 const router = express.Router();
 const cheerio = require("cheerio");
+const redis = require('redis');
+const client = redis.createClient();
 const siteUrl = "https://heoc.mohp.gov.np/";
 const data = [];
+
+
+client.on('error', (err) => {
+  console.log("Error " + err);
+});
+
 
 router.get('/', (req, res) => {
 	res.send("api working");
@@ -16,20 +24,30 @@ router.get('/', (req, res) => {
 
 // only counts
 router.get('/count', (req, res) => {
-	axios.get('https://api.coronatracker.com/v3/stats/worldometer/global')
-	  .then(function (response) {
-	    // handle success
-	    console.log(response.data);
-	    res.send(JSON.stringify(response.data));
-	  })
-	  .catch(function (error) {
-	    // handle error
-	    res.send(error);
-	    console.log(error);
-	  })
-	  .finally(function () {
-	    // always executed
-	  });
+	const globalCountUrl = 'https://api.coronatracker.com/v3/stats/worldometer/global';
+	client.get(globalCountUrl, (err, result) => {
+		if(result) {
+		   const resultJSON = JSON.parse(result);
+           return res.status(200).json(resultJSON);
+		} else {
+			axios.get(globalCountUrl)
+			  .then(function (response) {
+			    // handle success
+			    console.log(response.data);
+			    client.setex(globalCountUrl, 3600, JSON.stringify({ source: 'Redis Cache', ...responseJSON, }));
+			    res.status(200).send(JSON.stringify(response.data));
+			  })
+			  .catch(function (error) {
+			    // handle error
+			    res.send(error);
+			    console.log(error);
+			  })
+			  .finally(function () {
+			    // always executed
+			  });
+		}
+	});
+	
 });
 
 // all districts
