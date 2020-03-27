@@ -8,15 +8,33 @@ const express = require("express");
 const router = express.Router();
 const cheerio = require("cheerio");
 const redis = require('redis');
-const client = redis.createClient();
 const siteUrl = "https://heoc.mohp.gov.np/";
 const data = [];
+const port_redis = process.env.PORT || 6379;
+const client = redis.createClient(port_redis);
 
 
 client.on('error', (err) => {
   console.log("Error " + err);
 });
 
+// //Middleware Function to Check Cache
+// checkCache = (req, res, next) => {
+//   const { id } = req.params;
+//   redis_client.get(id, (err, data) => {
+//     if (err) {
+//       console.log(err);
+//       res.status(500).send(err);
+//     }
+//     //if no match found
+//     if (data != null) {
+//       res.send(data);
+//     } else {
+//       //proceed to next middleware function
+//       next();
+//     }
+//   });
+// };
 
 router.get('/', (req, res) => {
 	res.send("api working");
@@ -28,9 +46,10 @@ router.get('/count', (req, res) => {
 	client.get(globalCountUrl, (err, result) => {
 		if(result) {
 		   const resultJSON = JSON.parse(result);
-           return res.status(200).json(resultJSON);
+           res.status(200).json(resultJSON);
 		} else {
-			axios.get(globalCountUrl)
+			const options = { headers: {'Origin': 'https://www.coronatracker.com'}};
+			axios.get(globalCountUrl, options)
 			  .then(function (response) {
 			    // handle success
 			    console.log(response.data);
