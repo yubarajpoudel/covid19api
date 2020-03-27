@@ -3,69 +3,64 @@
 
 const covid = require('novelcovid');
 const axios = require('axios');
-// const getResults = require("../scrapper");
+const getResults = require("../scrapper");
 const express = require("express");
 const router = express.Router();
 const cheerio = require("cheerio");
 const redis = require('redis');
-const siteUrl = "https://heoc.mohp.gov.np/";
-const data = [];
 const port_redis = process.env.PORT || 6379;
 const client = redis.createClient(port_redis);
-
+const globalCountUrl = 'https://api.coronatracker.com/v3/stats/worldometer/global';
 
 client.on('error', (err) => {
   console.log("Error " + err);
 });
 
-// //Middleware Function to Check Cache
-// checkCache = (req, res, next) => {
-//   const { id } = req.params;
-//   redis_client.get(id, (err, data) => {
-//     if (err) {
-//       console.log(err);
-//       res.status(500).send(err);
-//     }
-//     //if no match found
-//     if (data != null) {
-//       res.send(data);
-//     } else {
-//       //proceed to next middleware function
-//       next();
-//     }
-//   });
-// };
+//Middleware Function to Check Cache
+checkCache = (req, res, next) => {
+  client.get(globalCountUrl, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send(err);
+    }
+    //if no match found
+    if (data != null) {
+      res.status(200).send(data);
+    } else {
+      //proceed to next middleware function
+      next();
+    }
+  });
+};
 
 router.get('/', (req, res) => {
 	res.send("api working");
 });
 
 // only counts
-router.get('/count', (req, res) => {
-	const globalCountUrl = 'https://api.coronatracker.com/v3/stats/worldometer/global';
-	client.get(globalCountUrl, (err, result) => {
-		if(result) {
-		   const resultJSON = JSON.parse(result);
-           res.status(200).json(resultJSON);
-		} else {
-			const options = { headers: {'Origin': 'https://www.coronatracker.com'}};
-			axios.get(globalCountUrl, options)
-			  .then(function (response) {
-			    // handle success
-			    console.log(response.data);
-			    client.setex(globalCountUrl, 3600, JSON.stringify({ source: 'Redis Cache', ...response.data, }));
-			    res.status(200).send(JSON.stringify(response.data));
-			  })
-			  .catch(function (error) {
-			    // handle error
-			    res.send(error);
-			    console.log(error);
-			  })
-			  .finally(function () {
-			    // always executed
-			  });
+router.get('/count', checkCache, async (req, res) => {
+	try{
+		const options = { headers: {'Origin': 'https://www.coronatracker.com'}};
+		axios.get(globalCountUrl, options)
+		  .then(function (response) {
+		    // handle success
+		    console.log(response.data);
+		    client.setex(globalCountUrl, 3600, JSON.stringify({ source: 'Redis Cache', ...response.data, }));
+		    res.status(200).send(JSON.stringify(response.data));
+		  })
+		  .catch(function (error) {
+		    // handle error
+		    res.send(error);
+		    console.log(error);
+		  })
+		  .finally(function () {
+		    // always executed
+		  });
 		}
-	});
+	catch(error) {
+		console.log(error);
+    	res.status(500).json(error);
+	}
 	
 });
 
@@ -81,11 +76,11 @@ router.get('/districts', (req, res) => {
 		  .then(function (response) {
 		    // handle success
 		    console.log(response.data);
-		    res.send(JSON.stringify(response.data));
+		    res.status(200).send(JSON.stringify(response.data));
 		  })
 		  .catch(function (error) {
 		    // handle error
-		    res.send(error);
+		    res.status(500).send(error);
 		    console.log(error);
 		  })
 		  .finally(function () {
@@ -107,11 +102,11 @@ router.get('/hospitals', (req, res) => {
 		  .then(function (response) {
 		    // handle success
 		    console.log(response.data);
-		    res.send(JSON.stringify(response.data));
+		    res.status(200).send(JSON.stringify(response.data));
 		  })
 		  .catch(function (error) {
 		    // handle error
-		    res.send(error);
+		    res.status(500).send(error);
 		    console.log(error);
 		  })
 		  .finally(function () {
@@ -122,46 +117,22 @@ router.get('/hospitals', (req, res) => {
 
 // get press release from https://heoc.mohp.gov.np/
 router.get('/np/pressrelease', (req, res) => {
-  	const resultKeys = ["sn", "published_date", "title", "size", "download_url"];
-  console.log("fetching data");
-   axios.get(siteUrl)
-      .then(function (response) {
-        // handle success
-        // console.log(response.data);
-        const $ = cheerio.load(response.data);
-        $('#health-emergency tr').each((index, element) => {
-          var j = 0;
-          var objectResponse = {};
-          $(element).find('td').each((index, element) => {
-            if(j == 4) {
-              objectResponse[resultKeys[j]] = $(element).find('a').attr('href');
-            } else {
-              objectResponse[resultKeys[j]] = $(element).text();
-            }
-            j++;
-          });
-          data.push(objectResponse);
-        });
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-        res.send(error);
-      })
-      .finally(function () {
-        // always executed
-        console.log(data);
-        console.log("fetch completed");
-        data.shift();
-        res.send(JSON.stringify(data));
-      });
+	try {
+		getResults().then(pressreleaseData => {
+			console.log("i am here");
+			console.log(pressreleaseData);
+			res.send(JSON.stringify(pressreleaseData));
+		});
+	} catch(error) {
+		res.send(error);
+	}
 });
 
 // all countries
 router.get('/stat', (req, res) => {
 	   covid.getCountry({sort: 'recovered'}).then((data) => {
 	   	 console.log(data);
-	   	 res.send(JSON.stringify(data));
+	   	 res.status(200).send(JSON.stringify(data));
 	   });
 	 // res.send("success");
 });
@@ -170,24 +141,20 @@ router.get('/stat', (req, res) => {
 router.get('/country', (req, res) => {
 	try {
 		if (req.query == {} || !req.query.name) {
-			res.send(JSON.stringify({'message': 'key name missing in request'}));
+			res.status(200).send(JSON.stringify({'message': 'key name missing in request'}));
 		} else {
 			console.log(req.query.name);
 			covid.getCountry({country: req.query.name}).then((data) => {
-			res.send(JSON.stringify(data));
+			res.status(200).send(JSON.stringify(data));
 		});	
 		}
 		
 	} catch(e) {
 		console.log(e);
+		res.status(500).send(e);
 	}
 	
 });
-
-
-// app.listen(8019, () => {
-//   console.log('Covid api listening on port 8019!')
-// });
 
 module.exports = router;
 
