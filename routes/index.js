@@ -53,7 +53,7 @@ router.get('/count', (req, res) => {
 			  .then(function (response) {
 			    // handle success
 			    console.log(response.data);
-			    client.setex(globalCountUrl, 3600, JSON.stringify({ source: 'Redis Cache', ...responseJSON, }));
+			    client.setex(globalCountUrl, 3600, JSON.stringify({ source: 'Redis Cache', ...response.data, }));
 			    res.status(200).send(JSON.stringify(response.data));
 			  })
 			  .catch(function (error) {
