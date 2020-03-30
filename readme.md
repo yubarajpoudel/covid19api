@@ -68,14 +68,14 @@ API URLs
    - open ``` firebase/fbadmin.js ```
    - change json filename with currently downloaded filename.
         
-        ``` var serviceAccount = require("../covi19-33867-firebase-adminsdk-196bn-90c32ade6c.json");
+        ```
+         var serviceAccount = require("../covi19-33867-firebase-adminsdk-196bn-90c32ade6c.json");
         ```
 
    - open terminal and run shell file
       
       ```
         ./backup.sh
-      
       ```
       To run the backup, the project should be running. To run the project follow above step. Filepermission may block executing shell file. In that case in terminal run following command.
 
