@@ -111,3 +111,4 @@ temp/
 # End of https://www.gitignore.io/api/node
 # firebase credintials
 covi19-33867-firebase-adminsdk-196bn-90c32ade6c.json
+cronlog.txt

@@ -10,7 +10,7 @@ router.use(function timeLog (req, res, next) {
 
 router.post('/backup', function(req, res) {
 	// two params required in post request
-	// 1. type (global, country_wise, all_stat)
+	// 1. type (global, country_wise, nepal)
 	// 2. data
 	try {
 		if(req.body && 'type' in req.body && 'data' in req.body) {
@@ -18,14 +18,28 @@ router.post('/backup', function(req, res) {
 			var type = req.body.type;
 			console.log("type = " + type + " data = " + data);
 			if(type == 'global') {
-				backup.globalData(req.body.data).then(function(response){
-				console.log(response);
-				res.send(response);
+				backup.globalData(data).then(function(response){
+					console.log(response);
+					res.send(response);
+			 }, function(err) {
+			 	console.log(err);
+			 });
+			}else if(type == 'country_wise') {
+				backup.allStat(data).then(function(response){
+					console.log(response);
+					res.send(response);
+			 }, function(err) {
+			 	console.log(err);
+			 });
+			} else if(type == 'nepal') {
+				backup.nepalData(data).then(function(response){
+					console.log(response);
+					res.send(response);
 			 }, function(err) {
 			 	console.log(err);
 			 });
 			} else {
-				console.log("hahaha");
+				res.status(401).send({'message': 'invalid type'});
 			}
 			
 		} else {
