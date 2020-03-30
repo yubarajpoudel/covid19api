@@ -1,6 +1,7 @@
 var createError = require('http-errors');
 const express = require('express')
 var indexRouter = require('./routes/index');
+var backupRouter = require('./routes/fbbackup.js');
 const app = express();
 const cors = require('cors');
 var path = require('path');
@@ -26,6 +27,7 @@ app.use(function(req, res, next) {
 });
 
 app.use('/', indexRouter);
+app.use('/', backupRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
