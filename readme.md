@@ -52,6 +52,39 @@ API URLs
 
   ```
 
+  backup data in [firebase](https://console.firebase.google.com) firestore
+  =============
+
+  Firestore is a realtime storage database providedd by firebase google. It stores the data in the form of collection and document.
+
+  Steps to create backup
+
+   - Create the project in firebase. Go to dashboard and create new project
+   - Go to project Dashboard
+        - project overview in left pannel
+        - Project settings => service accounts
+        - click Generate new private key, this will download json file.
+        - save that json file in project folder
+   - open ``` firebase/fbadmin.js ```
+   - change json filename with currently downloaded filename.
+        
+        ``` var serviceAccount = require("../covi19-33867-firebase-adminsdk-196bn-90c32ade6c.json");
+        ```
+
+   - open terminal and run shell file
+      
+      ```
+        ./backup.sh
+      
+      ```
+      To run the backup, the project should be running. To run the project follow above step. Filepermission may block executing shell file. In that case in terminal run following command.
+
+      ```
+         sudo chmod 777 ./backup.sh
+      ```
+      and Try again.
+
+
 Thats all .
 
 @Stay safe and help others. 
