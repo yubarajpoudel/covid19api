@@ -37,6 +37,27 @@ router.get('/', (req, res) => {
 	res.send("api working");
 });
 
+// all countries
+router.get('/stat', (req, res) => {
+   client.get('stat', (err, data) => {
+	   	if(err) {
+	   		console.log(err);
+	   		res.status(500).send(err);
+	   	} 
+	   	if(data != null) {
+	   		console.log("from Cache");
+	   		res.status(200).send(data);
+	   	} else {
+	   		 covid.getCountry({sort: 'recovered'}).then((response) => {
+	   	 	 // console.log(response);
+	   	 	 client.setex('stat', 600, JSON.stringify(response));
+	   	 	 res.status(200).send(JSON.stringify(response));
+	    	});
+	   	}
+	});
+});
+
+
 // only counts
 router.get('/count', checkCache, async (req, res) => {
 	try{
@@ -126,15 +147,6 @@ router.get('/np/pressrelease', (req, res) => {
 	} catch(error) {
 		res.send(error);
 	}
-});
-
-// all countries
-router.get('/stat', (req, res) => {
-	   covid.getCountry({sort: 'recovered'}).then((data) => {
-	   	 console.log(data);
-	   	 res.status(200).send(JSON.stringify(data));
-	   });
-	 // res.send("success");
 });
 
 // get by country name
