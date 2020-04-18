@@ -1,9 +1,7 @@
 // @description: Covid 19 api
 // @author: Yubaraj Poudel
-
-const covid = require('novelcovid');
 const axios = require('axios');
-const getResults = require("../scrapper");
+const scrapper = require("../scrapper");
 const express = require("express");
 const router = express.Router();
 const cheerio = require("cheerio");
@@ -11,7 +9,7 @@ const redis = require('redis');
 const port_redis = process.env.PORT || 6379;
 const client = redis.createClient(port_redis);
 const globalCountUrl = 'https://api.coronatracker.com/v3/stats/worldometer/global';
-
+const coviddataUrl = 'https://corona.lmao.ninja/v2';
 client.on('error', (err) => {
   console.log("Error " + err);
 });
@@ -46,13 +44,18 @@ router.get('/stat', (req, res) => {
 	   	} 
 	   	if(data != null) {
 	   		console.log("from Cache");
-	   		res.status(200).send(data);
+	   		res.status(200).send(JSON.parse(data));
 	   	} else {
-	   		 covid.getCountry({sort: 'recovered'}).then((response) => {
-	   	 	 // console.log(response);
-	   	 	 client.setex('stat', 600, JSON.stringify(response));
-	   	 	 res.status(200).send(JSON.stringify(response));
-	    	});
+	   		 const options = { headers: {'accept': 'application/json'}};
+	   		 axios.get(coviddataUrl+"/countries?sort=recovered", options)
+	   		 .then(function(response) {
+	   		 	 client.setex('stat', 600, JSON.stringify(response.data));
+	   	 	 	 res.status(200).send(response.data);
+	   		 })
+	   		 .catch(function(error) {
+	   		 	console.log(error);
+	   		 	res.status(500).send(JSON.stringify({'success': false, 'message': error}))
+	   		 });
 	   	}
 	});
 });
@@ -139,10 +142,21 @@ router.get('/hospitals', (req, res) => {
 // get press release from https://heoc.mohp.gov.np/
 router.get('/np/pressrelease', (req, res) => {
 	try {
-		getResults().then(pressreleaseData => {
+		scrapper.getResults().then(pressreleaseData => {
 			console.log("i am here");
 			console.log(pressreleaseData);
 			res.send(JSON.stringify(pressreleaseData));
+		});
+	} catch(error) {
+		res.send(error);
+	}
+});
+
+// get WHO scrap data
+router.get('who/all', (req, res) => {
+	try {
+		scrapper.getWHOData().then( whodata => {
+			console.log(whodata);
 		});
 	} catch(error) {
 		res.send(error);
@@ -155,10 +169,17 @@ router.get('/country', (req, res) => {
 		if (req.query == {} || !req.query.name) {
 			res.status(200).send(JSON.stringify({'message': 'key name missing in request'}));
 		} else {
-			console.log(req.query.name);
-			covid.getCountry({country: req.query.name}).then((data) => {
-			res.status(200).send(JSON.stringify(data));
-		});	
+			 console.log(req.query.name);
+			 var countryName =req.query.name;
+			 const options = { headers: {'accept': 'application/json'}};
+			 var url = coviddataUrl+"/countries/"+countryName;
+	   		 axios.get(url, options)
+	   		 .then(function(response) {
+	   	 	 	 res.status(200).send(response.data);
+	   		 })
+	   		 .catch(function(error) {
+	   		 	res.status(500).send(JSON.stringify({'success': False, 'message': error}))
+	   		 });
 		}
 		
 	} catch(e) {

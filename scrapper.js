@@ -36,4 +36,22 @@ const getResults = async () => {
     return error;
   }
 }
-module.exports = getResults;
+
+const getWHOData = async() => {
+  try {
+    const whoSiteResponse = await axios.get("https://experience.arcgis.com/experience/685d0ace521648f8a5beeeee1b9125cd");
+    console.log("whoscrap status", whoSiteResponse.status);
+    const $ = cheerio.load(whoSiteResponse.data);
+    $('nav .feature-list').each((index, element) => {
+      console.log($(element).text());
+    });
+    return "working";
+  } catch(error) {
+    return error;
+  }
+}
+
+module.exports = {
+   getResults,
+   getWHOData
+  }
