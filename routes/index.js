@@ -63,6 +63,7 @@ router.get('/stat', (req, res) => {
 router.get('/timeseries', (req, res) => {
     var days = req.query.days || '30';
     var key = 'timeseries-'+days;
+    console.log(key);
    client.get(key, (err, data) => {
 	   	if(err) {
 	   		console.log(err);
