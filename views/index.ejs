@@ -6,20 +6,38 @@
         body {
             font-family: sans-serif;
         }
-        .counter {
+
+        .about-section {
+            padding: 50px;
+            text-align: center;
+            background-color: #474e5d;
+            color: white;
+        }
+        .api-link {
             padding: 10px;
             margin: 10px;
             background-color: lightblue;
             border: 1px solid blue;
-            width: 150px;
+            width: 60%;
+            display: block;
         }
     </style>
 </head>
 
 <body>
-    <h1>Covid Api</h1>
-    <div class="counter">
-        You are visitor number: <%= count %> </span>
+    <div class="about-section">
+        <h1>Covid Api</h1>
+        <h2> Total Request Served : <%= count %> </h2>
+        <p> 
+            <h3>Fork in the <a href="https://github.com/yubarajpoudel/covid19api"> github.</a> </h3>
+            </p>
     </div>
+
+    <p> <h2>Apis </h2></p>
+
+        <a class="api-link" href="https://covidapi.yubarajpoudel.com/count"> Global data </a>
+        <a class="api-link" href="https://covidapi.yubarajpoudel.com/stat"> All Country data </a>
+        <a class="api-link" href="https://covidapi.yubarajpoudel.com/country?name=nepal"> Data by country name </a>
+        <a class="api-link" href="https://covidapi.yubarajpoudel.com/timeseries?day=10"> Time series data by day count </a>
 </body>
 </html>

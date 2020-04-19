@@ -47,11 +47,6 @@ app.use('/', backupRouter);
 app.use(function(req, res, next) {
   next(createError(404));
 });
-
-app.use('/', (req, res) => {
-    res.render("index", {count: req.api_count});
-});
-
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
