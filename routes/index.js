@@ -32,9 +32,8 @@ checkCache = (req, res, next) => {
 };
 
 router.get('/', (req, res) => {
-	res.send("api working");
+    res.render("index", {count: req.api_count});
 });
-
 // all countries
 router.get('/stat', (req, res) => {
    client.get('stat', (err, data) => {

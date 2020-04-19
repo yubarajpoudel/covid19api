@@ -8,8 +8,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const responseTime = require('response-time')
-
 const port_redis = process.env.PORT || 6379;
+const storage = require('node-persist');
+var bodyParser = require("body-parser"); 
 
 app.use(cors());
 app.use(logger('dev'));
@@ -17,6 +18,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.set("view engine", "ejs"); 
+app.set("views", __dirname + "/views"); 
+app.use(bodyParser.urlencoded({ extended: false })); 
+
 // use response-time as a middleware
 app.use(responseTime());
 
@@ -26,13 +31,26 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.use('/', indexRouter);
+
+var counter = 0;
+
+const incrementCounter = (req, res, next) => {
+  counter ++;
+  storage.setItem("counter", counter).then(() => {
+        req.api_count = counter;
+        next();
+    });
+}
+app.use('/', incrementCounter, indexRouter);
 app.use('/', backupRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
 
+app.use('/', (req, res) => {
+    res.render("index", {count: req.api_count});
+});
 
 // error handler
 app.use(function(err, req, res, next) {
@@ -49,4 +67,15 @@ app.use(function(err, req, res, next) {
 });
 
 const port = 8019
-app.listen(port, () => console.log(`App listening on port ${port}!`))
+app.listen(port, () => {
+// Inits permanent storage and reads the saved counter
+storage.init().then(() => storage.getItem("counter")).then((value) => {
+    // Checks if value read is valid, otherwise set it to 0
+    if (value > 0) {
+        counter = value;
+    } else {
+        counter = 0;
+    }
+  });
+  console.log(`App listening on port ${port}!`);
+});
