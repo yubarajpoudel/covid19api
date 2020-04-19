@@ -23,7 +23,7 @@ Check redis installed or not
 Setup Process
  - clone repository
  - get inside the project folder and run `npm install`
- - Run project in development `nodemon index.js` or in release `pm2 start index.js -i max`
+ - Run project in development `nodemon api.js` or in release `pm2 start api.js -i max`
  
 API URLs
 - 127.0.0.1:8019 - shows status of api
