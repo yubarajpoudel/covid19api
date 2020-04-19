@@ -45,13 +45,13 @@ API URLs
 
 ```
 
-- 127.0.0.1/np/pressrelease [Nepal press release data](https://heoc.mohp.gov.np/)
+- 127.0.0.1:800/np/pressrelease [Nepal press release data](https://heoc.mohp.gov.np/)
 
   ```
   [{"sn":"1","published_date":"22 Feb 2019","title":"Kavre, Panchkhal Food Poisoning – Press Release #4","size":" ","download_url":"https://drive.google.com/open?id=1c7Pl9132zgkOfua8Ukk6qoc9CvN2FjcX"},{"sn":"2","published_date":"22 Feb 2019","title":"Kavre, Panchkhal Food Poisoning – Press Release #3","size":" ","download_url":"https://drive.google.com/open?id=19zQpZORamL2WRwdZFVZlTBvTt4Q1SNKG"},{"sn":"3","published_date":"22 Feb 2019","title":"Kavre, Panchkhal Food Poisoning – Press Release #2","size":" ","download_url":"https://drive.google.com/open?id=1QRmjtlUZwQvRrqm87AOa6DVor3E5_brA"}, ...]
 
   ```
-- 127.0.0.1/timeseries?days=2 (2 days data of recovered, death and confirmation)
+- 127.0.0.1:8000/timeseries?days=2 (2 days data of recovered, death and confirmation)
   
   ```
   {"cases":{"4/17/20":2240190,"4/18/20":2317758},"deaths":{"4/17/20":153821,"4/18/20":159509},"recovered":{"4/17/20":557798,"4/18/20":581355}}
