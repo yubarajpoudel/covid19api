@@ -60,6 +60,33 @@ router.get('/stat', (req, res) => {
 	});
 });
 
+// timeSeries data
+router.get('/timeseries', (req, res) => {
+    var days = req.query.days || '30';
+    var key = 'timeseries-'+days;
+   client.get(key, (err, data) => {
+	   	if(err) {
+	   		console.log(err);
+	   		res.status(500).send(err);
+	   	} 
+	   	if(data != null) {
+	   		console.log("from Cache");
+	   		res.status(200).send(JSON.parse(data));
+	   	} else {
+	   		 const options = { headers: {'accept': 'application/json'}};
+	   		 axios.get(coviddataUrl+"/historical/all?lastdays="+days, options)
+	   		 .then(function(response) {
+	   		 	 client.setex(key, 600, JSON.stringify(response.data));
+	   	 	 	 res.status(200).send(response.data);
+	   		 })
+	   		 .catch(function(error) {
+	   		 	console.log(error);
+	   		 	res.status(500).send(JSON.stringify({'success': false, 'message': error}))
+	   		 });
+	   	}
+	});
+});
+
 
 // only counts
 router.get('/count', checkCache, async (req, res) => {
