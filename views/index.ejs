@@ -1,43 +1,163 @@
-<!DOCTYPE html>
-<html>
-<head>
+<!doctype html>
+<html lang="en">
+  <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Covid19 api for free use">
+    <meta name="author" content="Yubaraj Poudel">
+    <meta name="generator" content="Jekyll v3.8.6">
+    <title>covidapi</title>
+    <!-- Bootstrap core CSS -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Favicons -->
+<link rel="apple-touch-icon" href="/docs/4.4/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
+<link rel="icon" href="/docs/4.4/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/docs/4.4/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="manifest" href="/docs/4.4/assets/img/favicons/manifest.json">
+<link rel="mask-icon" href="/docs/4.4/assets/img/favicons/safari-pinned-tab.svg" color="#563d7c">
+<link rel="icon" href="/docs/4.4/assets/img/favicons/favicon.ico">
+<meta name="msapplication-config" content="/docs/4.4/assets/img/favicons/browserconfig.xml">
+<meta name="theme-color" content="#D32F2F">
+
+
     <style>
-        body {
-            font-family: sans-serif;
-        }
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
 
-        .about-section {
-            padding: 50px;
-            text-align: center;
-            background-color: #474e5d;
-            color: white;
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
         }
-        .api-link {
-            padding: 10px;
-            margin: 10px;
-            background-color: lightblue;
-            border: 1px solid blue;
-            width: 60%;
-            display: block;
-        }
+      }
+    
     </style>
-</head>
-
-<body>
-    <div class="about-section">
-        <h1>Covid Api</h1>
-        <h2> Total Request Served : <%= count %> </h2>
-        <p> 
-            <h3>Fork in the <a href="https://github.com/yubarajpoudel/covid19api"> github.</a> </h3>
-            </p>
+    <!-- Custom styles for this template -->
+    <link href="album.css" rel="stylesheet">
+  </head>
+  <body>
+    <header>
+  <div class="collapse bg-danger" id="navbarHeader">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-8 col-md-7 py-4">
+          <h4 class="text-white"> About Author</h4>
+          <p class="text-white">Full stack Developer (Mobile application, DevOps, python, Django, NodeJS)| Speaker | Blogger | Computer engineering graduate 
+</p>
+        </div>
+        <div class="col-sm-4 offset-md-1 py-4">
+          <h4 class="text-white">Contact</h4>
+          <ul class="list-unstyled">
+            <li><a href="https://twitter.com/yubaraj_coder" class="text-white">Follow on Twitter</a></li>
+            <li><a href="https://www.linkedin.com/in/yubarajpoudel/" class="text-white">Connect in Linkedin</a></li>
+            <li><a href="yubarajpoudel708@gmail.com" class="text-white">Email me</a></li>
+          </ul>
+        </div>
+      </div>
     </div>
+  </div>
+  <div class="navbar navbar-dark  bg-danger shadow-sm">
+    <div class="container d-flex justify-content-between">
+      <a href="#" class="navbar-brand d-flex align-items-center">
+        <strong>Covid api</strong>
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+  </div>
+</header>
 
-    <p> <h2>Apis </h2></p>
+<main role="main">
 
-        <a class="api-link" href="https://covidapi.yubarajpoudel.com/count"> Global data </a>
-        <a class="api-link" href="https://covidapi.yubarajpoudel.com/stat"> All Country data </a>
-        <a class="api-link" href="https://covidapi.yubarajpoudel.com/country?name=nepal"> Data by country name </a>
-        <a class="api-link" href="https://covidapi.yubarajpoudel.com/timeseries?days=10"> Time series data by day count </a>
-</body>
+  <section class="jumbotron text-center">
+    <div class="container">
+      <p><h1><span style="color: green">"<b><%= count %></b>"</span> <i>requests served till date</i> </h1></p>
+      <p class="lead text-muted"> Create mobile application and beautiful dashboard, Covid live api is for free to use and develop in lockdown period for learning puporse. Data here is gathered from different sources, coronatracker.com, worldmeter.com and John Hopkin university data.</p>
+      <p>
+        <a href="https://github.com/yubarajpoudel/covid19api" class="btn btn-primary my-2">Fork in github</a>
+      </p>
+    </div>
+  </section>
+
+  <div class="album py-5 bg-light">
+    <div class="container">
+
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card mb-4 shadow-sm text-white bg-danger">
+            <div class="card-header"> Global Count API </div>
+            <div class="card-body">
+              <p class="card-text"> This api provides the daily global status of coronavirus affected, recovered death in total in json format.</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                    <a href="https://covidapi.yubarajpoudel.com/count" class="btn btn-primary">View</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card mb-4 shadow-sm text-white bg-danger">
+            <div class="card-header"> Country Wise API </div>
+            <div class="card-body">
+              <p class="card-text"> This api provides the daily stat by country wise in JSON format. It gives the data sorted by recovered.</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                    <a href="https://covidapi.yubarajpoudel.com/country/?name=us" class="btn btn-primary">View</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card mb-4 shadow-sm text-white bg-danger">
+            <div class="card-header"> TimeSeries API </div>
+            <div class="card-body">
+              <p class="card-text"> This API provide the death, recovered and affected count based in time frame. By default it will give 30 days last data.</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                    <a href="https://covidapi.yubarajpoudel.com/TimeSeries?days=30" class="btn btn-primary">View</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+         <div class="col-md-4">
+          <div class="card mb-4 shadow-sm text-white bg-danger">
+            <div class="card-header"> All Country API </div>
+            <div class="card-body">
+              <p class="card-text">This API gives all affected country list with their national data regarding the spread and affect of corona virus.</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                    <a href="https://covidapi.yubarajpoudel.com/stat" class="btn btn-primary">View</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+       
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="text-muted">
+  <div class="container">
+    <p class="float-right">
+      <a href="#">Back to top</a>
+    </p>
+    <p>It is free to use and updated every hour. I recommend to cache the data in your server if your are using this api as it may be slow to response because of hughe request.</p>
+  </div>
+</footer>
+<script src="js/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+      <script>window.jQuery || document.write('<script src="js/jquery.slim.min.js"><\/script>')</script><script src="js/bootstrap.bundle.min.js" integrity="sha384-6khuMg9gaYr5AxOqhkVIODVIvm9ynTT5J4V1cfthmT+emCG6yVmEZsRHdxlotUnm" crossorigin="anonymous"></script></body>
 </html>
