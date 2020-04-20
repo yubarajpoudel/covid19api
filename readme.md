@@ -4,7 +4,9 @@ Dependency
  - node 
  - Express
  - Redis
- - [novelcovid](https://www.npmjs.com/package/novelcovid)
+ - Firebase
+ - Node-persistent
+ - Ejs View Engine
 
 [Redis](https://redis.io/topics/quickstart) Installation
 ===
