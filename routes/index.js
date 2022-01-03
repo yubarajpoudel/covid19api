@@ -36,6 +36,7 @@ router.get('/', (req, res) => {
 });
 // all countries
 router.get('/stat', (req, res) => {
+	console.log("in stat");
    client.get('stat', (err, data) => {
 	   	if(err) {
 	   		console.log(err);
