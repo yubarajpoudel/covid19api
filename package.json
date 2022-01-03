@@ -25,7 +25,7 @@
     "node-persist": "^3.0.5",
     "novelcovid": "^1.2.5",
     "promise": "^8.1.0",
-    "redis": "^3.0.2",
+    "redis": "^3.1.1",
     "response-time": "^2.3.2"
   }
 }
